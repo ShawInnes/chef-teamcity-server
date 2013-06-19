@@ -6,8 +6,6 @@ Installs and configures a TeamCity Server for 'production use' with a:
 
 Tested on Ubuntu 12.04 x86_64.
 
-# Requirements
-
 # Usage
 
 1. Install default recipe
