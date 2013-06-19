@@ -7,7 +7,8 @@ include_recipe "git"
 # Install TeamCity Server
 include_recipe "teamcity_server::server"
 
-# Install PostgreSQL with teamcity user and database
+# Install PostgreSQL, including locale, user and database
+include_recipe "locale-gen"
 include_recipe "postgresql::server"
 
 # Configure TeamCity Server
