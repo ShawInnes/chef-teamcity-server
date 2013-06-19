@@ -29,8 +29,8 @@ default["teamcity-server"]["git"]["version"] = "1.8.3"
 
 # Recipes
 
-* _default_: Installs Oracle Java, TeamCity Server, PostgreSQL and Git.  Configures the TeamCity Server to use the
-PostgreSQL database (see Usage for full instructions).
+* __default__: Installs Oracle Java, TeamCity Server, PostgreSQL and Git.  Configures the TeamCity Server to use the
+PostgreSQL database.
 
 # Author
 
