@@ -1,6 +1,6 @@
 # teamcity-server cookbook
 
-Installs and configures a TeamCity Server for 'production use' with a:
+Installs and configures a TeamCity Server for 'production purposes' with a:
 * Database (PostgreSQL)
 * Git VCS support
 
@@ -8,12 +8,19 @@ Tested on Ubuntu 12.04 x86_64.
 
 # Usage
 
+Unfortunately, some manual steps are required due to configure the TeamCity server:
+
 1. Install default recipe
 2. Open http://<node>:8111
 3. Proceed with TeamCity initialization
-4. Create administrator account by logging-in
+4. Restart the TeamCity server
+```bash
+kill -9 $(ps aux | grep 'java' | grep -v 'grep' | awk '{print $2}')
+```
+5. Reopen http://<node>:8111
+6. Follow instructions to re-create database
 
-TeamCity logs can be found in /opt/TeamCity/logs.
+Logs can be found in /opt/TeamCity/logs
 
 # Attributes
 
@@ -27,8 +34,7 @@ default["teamcity-server"]["git"]["version"] = "1.8.3"
 
 # Recipes
 
-* __default__: Installs Oracle Java, TeamCity Server, PostgreSQL and Git.  Configures the TeamCity Server to use the
-PostgreSQL database.
+* __default__: Installs Oracle Java, TeamCity Server, PostgreSQL and Git.  Partially configures the TeamCity Server.
 
 # Author
 
