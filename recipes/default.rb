@@ -1,11 +1,5 @@
-# Install java
+# Install Java
 include_recipe "java"
-
-# Install Git
-include_recipe "git"
-
-# Install TeamCity Server
-include_recipe "teamcity_server::server"
 
 # Install PostgreSQL, including locale, user and database
 execute "add-locale" do
@@ -13,17 +7,41 @@ execute "add-locale" do
 end
 include_recipe "postgresql::server"
 
-# Configure TeamCity Server
-data_directory = "/root/.BuildServer"
+# Install Git
+include_recipe "git"
 
+# Install TeamCity Server
+server_archive = "TeamCity-#{node["teamcity-server"]["version"]}.tar.gz"
+server_directory = "/opt"
+remote_file "#{server_directory}/#{server_archive}" do
+  backup false
+  source "http://download.jetbrains.com/teamcity/#{server_archive}"
+  action :create_if_missing
+  notifies :run, "execute[install-teamcity]", :immediately
+end
+execute "install-teamcity" do
+  command "tar -xvf #{server_archive}"
+  cwd server_directory
+  action :nothing
+end
+
+# Configure TeamCity Server
+config_directory = "#{server_directory}/TeamCity/conf"
+template "#{config_directory}/server.xml" do
+  source "server.xml.erb"
+  variables(
+    :address => node["teamcity-server"]["address"],
+    :port => node["teamcity-server"]["port"]
+  )
+end
+
+data_directory = "/root/.BuildServer"
 jdbc_driver_filename = "postgresql-#{node["teamcity-server"]["postgresql"]["driver_version"]}.jdbc4.jar"
 jdbc_driver_directory = "#{data_directory}/lib/jdbc"
-
 directory jdbc_driver_directory do
   recursive true
   action :create
 end
-
 remote_file "#{jdbc_driver_directory}/#{jdbc_driver_filename}" do
   backup false
   mode 00644
@@ -31,18 +49,23 @@ remote_file "#{jdbc_driver_directory}/#{jdbc_driver_filename}" do
   action :create_if_missing
 end
 
-config_directory = "#{data_directory}/config"
-
-directory config_directory do
+data_config_directory = "#{data_directory}/config"
+directory data_config_directory do
   recursive true
   action :create
 end
-
-template "#{config_directory}/database.properties" do
+cookbook_file "#{data_config_directory}/database.properties" do
   source "database.properties"
-  action :create
+  action :create_if_missing
 end
 
-bluepill_service "teamcity-server" do
-  action :restart
+# Start TeamCity Service
+cookbook_file "/etc/init/teamcity-server.conf" do
+  backup false
+  source "init/teamcity-server.conf"
+  action :create_if_missing
+end
+service "teamcity-server" do
+  provider Chef::Provider::Service::Upstart
+  action :start
 end
