@@ -9,3 +9,5 @@ version          "0.0.4"
 depends "java", "~> 1.11.4"
 depends "git", "~> 2.5.2"
 depends "postgresql", "~> 0.10.1"
+
+supports "ubuntu", "= 12.04"
