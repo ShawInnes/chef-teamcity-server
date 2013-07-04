@@ -4,7 +4,7 @@ maintainer_email 'matthew.ueckerman@myob.com'
 license          'All rights reserved'
 description      'Installs/Configures a TeamCity Server for production use'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.0.4'
+version          '0.0.5'
 
 recipe 'teamcity-server', 'Installs/Configures a TeamCity Server for production use'
 

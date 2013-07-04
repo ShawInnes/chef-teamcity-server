@@ -1,3 +1,5 @@
+archive_directory = Chef::Config[:file_cache_path]
+
 # Install Java
 include_recipe "java"
 
@@ -29,18 +31,23 @@ node.default["git"]["version"] = node["teamcity-server"]["git"]["version"]
 
 include_recipe "git"
 
+
 # Install TeamCity Server
-server_archive = "TeamCity-#{node["teamcity-server"]["version"]}.tar.gz"
-server_directory = "/opt"
-remote_file "#{server_directory}/#{server_archive}" do
+server_archive_name = "TeamCity-#{node["teamcity-server"]["version"]}.tar.gz"
+server_archive_path = "#{archive_directory}/#{server_archive_name}"
+server_directory = "/opt/teamcity/#{node["teamcity-server"]["version"]}"
+remote_file server_archive_path do
   backup false
-  source "http://download.jetbrains.com/teamcity/#{server_archive}"
+  source "http://download.jetbrains.com/teamcity/#{server_archive_name}"
   action :create_if_missing
-  notifies :run, "execute[install-teamcity]", :immediately
+  notifies :run, "bash[install-teamcity]", :immediately
 end
-execute "install-teamcity" do
-  command "tar -xvf #{server_archive}"
-  cwd server_directory
+bash "install-teamcity" do
+  code <<-EOH
+    mkdir -p #{server_directory}
+    cd #{server_directory}
+    tar -xvf #{server_archive_path}
+  EOH
   action :nothing
 end
 
@@ -52,6 +59,9 @@ template "#{config_directory}/server.xml" do
     :address => node["teamcity-server"]["address"],
     :port => node["teamcity-server"]["port"]
   )
+end
+link "/opt/teamcity/current" do
+  to server_directory
 end
 
 data_directory = "/root/.BuildServer"
@@ -83,8 +93,10 @@ cookbook_file "/etc/init/teamcity-server.conf" do
   backup false
   source "init/teamcity-server.conf"
   action :create_if_missing
+  notifies :start, "service[teamcity-server]", :immediately
 end
+
 service "teamcity-server" do
   provider Chef::Provider::Service::Upstart
-  action :start
+  action :restart
 end
