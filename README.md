@@ -36,7 +36,7 @@ sudo start teamcity-server
 # Attributes
 
 ```ruby
-default["teamcity-server"]["version"] = "8.0.5"
+default["teamcity-server"]["version"] = "8.1"
 default["teamcity-server"]["address"] = "0.0.0.0"
 default["teamcity-server"]["port"] = 8111
 default["teamcity-server"]["postgresql"]["version"] = "9.2"
