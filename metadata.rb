@@ -4,12 +4,13 @@ maintainer_email 'matthew.ueckerman@myob.com'
 license          'All rights reserved'
 description      'Installs/Configures a TeamCity Server for production use'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.0.9'
+version          '0.0.10'
 
 recipe 'teamcity-server', 'Installs/Configures a TeamCity Server for production use'
+recipe 'teamcity-server::postgresql', "Internal recipe to install/configure the servers database"
 
-depends 'java', '~> 1.11.4'
-depends 'git', '~> 2.5.2'
-depends 'postgresql', '~> 0.10.1'
+depends 'java', '~> 1.22.0'
+depends 'git', '~> 4.0.2'
+depends 'postgresql', '~> 0.14.1'
 
 supports 'ubuntu', '= 12.04'

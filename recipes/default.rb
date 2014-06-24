@@ -3,34 +3,13 @@ archive_directory = Chef::Config[:file_cache_path]
 # Install Java
 include_recipe "java"
 
-# Install PostgreSQL, including locale, user and database
-node.default["postgresql"]["version"] = node["teamcity-server"]["postgresql"]["version"]
-node.default["postgresql"]["initdb_options"] = "--locale=#{node["teamcity-server"]["postgresql"]["locale"]}"
-node.default["postgresql"]["lc_messages"] = node["teamcity-server"]["postgresql"]["locale"]
-node.default["postgresql"]["lc_monetary"] = node["teamcity-server"]["postgresql"]["locale"]
-node.default["postgresql"]["lc_numeric"] = node["teamcity-server"]["postgresql"]["locale"]
-node.default["postgresql"]["lc_time"] = node["teamcity-server"]["postgresql"]["locale"]
-node.default["postgresql"]["databases"] = [
-  {
-    "name" => "teamcity",
-    "owner" => "teamcity",
-    "template" => "template0",
-    "encoding" => "utf8",
-    "locale" => node["teamcity-server"]["postgresql"]["locale"],
-  }
-]
-
-execute "add-locale" do
-  command "locale-gen #{node["teamcity-server"]["postgresql"]["locale"]}"
-end
-
-include_recipe "postgresql::server"
+# Install PostgreSQL
+include_recipe "teamcity-server::postgresql"
 
 # Install Git
 node.default["git"]["version"] = node["teamcity-server"]["git"]["version"]
 
 include_recipe "git"
-
 
 # Install TeamCity Server
 server_archive_name = "TeamCity-#{node["teamcity-server"]["version"]}.tar.gz"
