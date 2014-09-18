@@ -11,6 +11,6 @@ recipe 'teamcity-server::postgresql', "Internal recipe to install/configure the 
 
 depends 'java', '~> 1.22.0'
 depends 'git', '~> 4.0.2'
-depends 'postgresql', '~> 0.14.1'
+depends 'postgresql', '~> 3.4.1'
 
 supports 'ubuntu', '= 12.04'
