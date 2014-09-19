@@ -39,6 +39,11 @@ template "#{config_directory}/server.xml" do
     :port => node["teamcity-server"]["port"]
   )
 end
+
+template "#{server_directory}/bin/teamcity-init.sh" do
+  source "teamcity-init.sh.erb"
+end
+
 link "/opt/teamcity/current" do
   to server_directory
 end
