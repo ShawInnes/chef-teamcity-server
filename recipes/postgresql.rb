@@ -27,6 +27,7 @@ execute "add-locale" do
   command "locale-gen #{postgres_locale}"
 end
 
+include_recipe "postgresql::ruby"
 include_recipe "database"
 
 connection_info = {
