@@ -84,4 +84,18 @@ end
 service "teamcity-server" do
   provider Chef::Provider::Service::Upstart
   action :start
+  notifies :restart, "service[teamcity-agent]"
+end
+
+# Start TeamCity Agent Service
+template "/etc/init/teamcity-agent.conf" do
+  backup false
+  source "init/teamcity-agent.conf.erb"
+  action :create
+  notifies :restart, "service[teamcity-agent]"
+end
+
+service "teamcity-agent" do
+  provider Chef::Provider::Service::Upstart
+  action :start
 end
