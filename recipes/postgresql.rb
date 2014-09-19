@@ -23,19 +23,39 @@ node.default["postgresql"]["lc_monetary"] = postgres_locale
 node.default["postgresql"]["lc_numeric"] = postgres_locale
 node.default["postgresql"]["lc_time"] = postgres_locale
 
-# Database to create
-node.default["postgresql"]["databases"] = [
-  {
-    "name" => "teamcity",
-    "owner" => "teamcity",
-    "template" => "template0",
-    "encoding" => "utf8",
-    "locale" => postgres_locale,
-  }
-]
-
 execute "add-locale" do
   command "locale-gen #{postgres_locale}"
+end
+
+include_recipe "database"
+
+connection_info = {
+  :host     => 'localhost',
+  :port     => node['postgresql']['config']['port'] || 5432,
+  :username => 'postgres',
+  :password => node['postgresql']['password']['postgres']
+}
+
+database_user 'teamcity' do
+  connection  connection_info
+  password    'XxujDaoiOGghP9wT3fS4'
+  provider    Chef::Provider::Database::PostgresqlUser
+end
+
+
+database 'teamcity' do
+  connection  connection_info
+  provider    Chef::Provider::Database::Postgresql
+  action     :create
+end
+
+postgresql_database_user 'teamcity' do
+  connection    connection_info
+  database_name 'teamcity'
+  table         "*"
+  privileges    [:all]
+  host          '127.0.0.1'
+  action        :grant
 end
 
 include_recipe "postgresql::server"
