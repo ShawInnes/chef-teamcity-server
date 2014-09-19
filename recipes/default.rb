@@ -40,8 +40,9 @@ template "#{config_directory}/server.xml" do
   )
 end
 
-template "#{server_directory}/bin/teamcity-init.sh" do
+template "#{server_directory}/TeamCity/bin/teamcity-init.sh" do
   source "teamcity-init.sh.erb"
+  notifies :restart, "service[teamcity-server]"
 end
 
 link "/opt/teamcity/current" do
@@ -69,7 +70,7 @@ directory data_config_directory do
 end
 cookbook_file "#{data_config_directory}/database.properties" do
   source "database.properties"
-  action :create_if_missing
+  action :create
 end
 
 # Start TeamCity Service
@@ -77,10 +78,10 @@ template "/etc/init/teamcity-server.conf" do
   backup false
   source "init/teamcity-server.conf.erb"
   action :create
-  notifies :start, "service[teamcity-server]", :immediately
+  notifies :restart, "service[teamcity-server]"
 end
 
 service "teamcity-server" do
   provider Chef::Provider::Service::Upstart
-  action :restart
+  action :start
 end
