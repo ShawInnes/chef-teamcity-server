@@ -45,6 +45,12 @@ template "#{server_directory}/TeamCity/bin/teamcity-init.sh" do
   notifies :restart, "service[teamcity-server]"
 end
 
+# Configure TeamCity Agent
+agent_directory = "#{server_directory}/TeamCity/buildAgent"
+template "#{agent_directory}/conf/buildAgent.properties" do
+  source "agent/buildAgent.properties.erb"
+end
+
 link "/opt/teamcity/current" do
   to server_directory
 end
