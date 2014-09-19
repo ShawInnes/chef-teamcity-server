@@ -43,7 +43,7 @@ link "/opt/teamcity/current" do
   to server_directory
 end
 
-data_directory = "/root/.BuildServer"
+data_directory = node["teamcity-server"]["data_directory"] 
 jdbc_driver_filename = "postgresql-#{node["teamcity-server"]["postgresql"]["driver_version"]}.jdbc4.jar"
 jdbc_driver_directory = "#{data_directory}/lib/jdbc"
 directory jdbc_driver_directory do
@@ -68,10 +68,10 @@ cookbook_file "#{data_config_directory}/database.properties" do
 end
 
 # Start TeamCity Service
-cookbook_file "/etc/init/teamcity-server.conf" do
+template "/etc/init/teamcity-server.conf" do
   backup false
-  source "init/teamcity-server.conf"
-  action :create_if_missing
+  source "init/teamcity-server.conf.erb"
+  action :create
   notifies :start, "service[teamcity-server]", :immediately
 end
 

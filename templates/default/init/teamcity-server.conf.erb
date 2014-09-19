@@ -4,6 +4,8 @@
 
 description     "TeamCity Server"
 
+env TEAMCITY_DATA_PATH=<%= node["teamcity-server"]["data_directory"] %>
+
 start on filesystem or runlevel [2345]
 stop on runlevel [!2345]
 
