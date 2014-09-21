@@ -50,6 +50,7 @@ bash "install-teamcity" do
     mkdir -p #{server_directory}
     cd #{server_directory}
     tar -xvf #{server_archive_path} --strip 1 --owner=#{node['teamcity']['user']} --group=#{node['teamcity']['group']}
+    chown -R #{node['teamcity']['user']}:#{node['teamcity']['group']} #{server_directory}
   EOH
   action :nothing
 end

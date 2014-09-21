@@ -41,5 +41,11 @@ describe "Team City Server" do
   	it { should be_grouped_into 'teamcity' }
 	end
 
+	describe file('/opt/teamcity/current/webapps/ROOT/WEB-INF') do
+		it { should be_directory }
+  	it { should be_owned_by 'teamcity' }
+  	it { should be_grouped_into 'teamcity' }
+  end
+
 end
 
