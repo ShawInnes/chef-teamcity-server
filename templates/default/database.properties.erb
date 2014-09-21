@@ -8,9 +8,9 @@
 
 # Database: PostgreSQL
 
-connectionUrl=jdbc:postgresql://localhost:5432/teamcity
-connectionProperties.user=teamcity
-connectionProperties.password=XxujDaoiOGghP9wT3fS4
+connectionUrl=jdbc:postgresql://localhost:5432/<%= node['teamcity']['database']['name'] %>
+connectionProperties.user=<%= node['teamcity']['database']['user'] %>
+connectionProperties.password=<%= node['teamcity']['database']['password'] %>
 
 # The maximum number of connections TeamCity can open on database server.
 maxConnections=50

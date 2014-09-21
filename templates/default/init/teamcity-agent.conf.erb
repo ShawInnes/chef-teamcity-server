@@ -4,8 +4,11 @@
 
 description     "TeamCity Agent"
 
-start on filesystem or runlevel [2345]
-stop on runlevel [!2345]
+setuid <%= node["teamcity"]["user"] %>
+setgid <%= node["teamcity"]["group"] %>
 
-pre-start exec /opt/teamcity/current/TeamCity/buildAgent/bin/agent.sh start
-post-stop exec /opt/teamcity/current/TeamCity/buildAgent/bin/agent.sh stop
+start on started teamcity-server
+stop on stopped teamcity-server
+
+pre-start exec /opt/teamcity/current/buildAgent/bin/agent.sh start
+post-stop exec /opt/teamcity/current/buildAgent/bin/agent.sh stop

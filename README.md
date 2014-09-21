@@ -1,4 +1,4 @@
-# teamcity-server cookbook
+# teamcity cookbook
 
 Installs and configures a TeamCity server for 'production purposes' with a:
 * Database (PostgreSQL)
@@ -26,9 +26,9 @@ Should you need them, logs can be found in /opt/TeamCity/logs.
 3. Proceed with TeamCity initialization but do not accept license agreement
 4. Restart the TeamCity server
 ```
-sudo stop teamcity-server
+sudo stop teamcity
 # Wait until stopped
-sudo start teamcity-server
+sudo start teamcity
 ```
 5. Reopen the server homepage
 6. Follow instructions to re-create the database
@@ -36,19 +36,19 @@ sudo start teamcity-server
 # Attributes
 
 ```ruby
-default["teamcity-server"]["version"] = "8.1.4"
-default["teamcity-server"]["address"] = "0.0.0.0"
-default["teamcity-server"]["port"] = 8111
-default["teamcity-server"]["postgresql"]["version"] = "9.2"
-default["teamcity-server"]["postgresql"]["driver_version"] = "9.2-1002"
-default["teamcity-server"]["postgresql"]["locale"] = "en_AU.UTF-8"
-default["teamcity-server"]["git"]["version"] = "1.8.3"
+default["teamcity"]["version"] = "8.1.4"
+default["teamcity"]["address"] = "0.0.0.0"
+default["teamcity"]["port"] = 8111
+default["teamcity"]["postgresql"]["version"] = "9.2"
+default["teamcity"]["postgresql"]["driver_version"] = "9.2-1002"
+default["teamcity"]["postgresql"]["locale"] = "en_AU.UTF-8"
+default["teamcity"]["git"]["version"] = "1.8.3"
 ```
 
 # Recipes
 
 * __default__: Installs Oracle Java, PostgreSQL, Git and the TeamCity server.
-  Configures the TeamCity server and an Upstart service (teamcity-server).
+  Configures the TeamCity server and an Upstart service (teamcity).
 
 # Author
 
