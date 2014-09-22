@@ -31,7 +31,7 @@ user node['teamcity']['user'] do
   action :create
   comment "Team City"
   gid node['teamcity']['group']
-  system true
+  home node["teamcity"]["data_directory"]
 end
 
 
